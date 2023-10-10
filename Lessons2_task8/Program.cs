@@ -46,7 +46,7 @@ namespace Lessons2_task8
 
             Console.ReadKey();
 
-            Console.WriteLine();
+            Console.WriteLine(); //привет
         }
     }
 }
