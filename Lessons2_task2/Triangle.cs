@@ -14,20 +14,23 @@ namespace Lessons2_task2
     internal class Triangle
     {
 
-        Random random = new Random();
-
         private double sideA;
         private double sideB;
         private double sideC;
 
-        // Конструктор для создания объекта класса Triangle
-        public Triangle()
+        /// <summary>
+        /// Конструктор для создания объекта класса Triangle
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="r"></param>
+        /// <exception cref="ArgumentException"></exception>
+        public Triangle(int x, int y, int r)
         {
 
-            Random random = new Random();
-            sideA = random.Next(1, 11);
-            sideB = random.Next(1, 11);
-            sideC = random.Next(1, 11);
+            sideA = x;
+            sideB = y;
+            sideC = r;
 
             Console.WriteLine($"Сторона A: {sideA}, Сторона B: {sideB}, Сторона C: {sideC}");
 
@@ -38,7 +41,10 @@ namespace Lessons2_task2
 
         }
 
-        // Метод расчёта площади треугольника
+        /// <summary>
+        /// Метод расчёта площади треугольника
+        /// </summary>
+        /// <returns></returns>
         public double Square()
         {
             double value;
@@ -46,13 +52,22 @@ namespace Lessons2_task2
             return Math.Sqrt(value * (value - sideA) * (value - sideB) * (value - sideC));
         }
 
-        // Метод расчёта периметра треугольника
+        /// <summary>
+        /// Метод расчёта периметра треугольника
+        /// </summary>
+        /// <returns></returns>
         public double Perimeter()
         {
             return sideA + sideB + sideC;
         }
 
-        // Проверка на существование треугольника
+        /// <summary>
+        /// Проверка на существование треугольника
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="c"></param>
+        /// <returns></returns>
         private bool IsValidTriangle(double a, double b, double c)
         {
             return a + b > c && a + c > b && b + c > a;

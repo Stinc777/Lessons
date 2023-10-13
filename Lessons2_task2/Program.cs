@@ -23,11 +23,12 @@ namespace Lessons2_task2
             Console.WriteLine();
 
             Random random = new Random();
+
             while (true)
             {
                 try
                 {
-                    Triangle triangle = new Triangle();
+                    Triangle triangle = new Triangle(random.Next(1, 11), random.Next(1, 11), random.Next(1, 11));
 
                     Console.WriteLine($"Площадь треугольника: {triangle.Square():F2}");
                     Console.WriteLine($"Периметр треугольника: {triangle.Perimeter():F2}");

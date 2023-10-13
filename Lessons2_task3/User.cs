@@ -12,37 +12,97 @@ namespace Lessons2_task3
         private string name;
         private string subName;
         private string midName;
-        private string date;
-        private int age;
+        private DateTime date;
 
-        // Конструктор для создания объекта класса User
-        public User()
+        public string Name 
+        { 
+            get 
+            { 
+                return name; 
+            }
+
+            set
+            {
+                if (!string.IsNullOrWhiteSpace(value)) 
+                
+                {
+                    name = value;
+                }
+            }
+
+        }
+        public string SubName
+        {
+            get
+            {
+                return subName;
+            }
+
+            set
+            {
+                if (!string.IsNullOrWhiteSpace(value))
+
+                {
+                    name = value;
+                }
+            }
+        }
+        public string MidName
+        {
+            get
+            {
+                return midName;
+            }
+
+            set
+            {
+                if (!string.IsNullOrWhiteSpace(value))
+
+                {
+                    name = value;
+                }
+            }
+        }
+        public DateTime Date { get { return date; } }
+
+        public int Age
+        {
+            get
+            {
+
+                DateTime currentDate = DateTime.Now;
+                int age = currentDate.Year - date.Year;
+
+                // Проверка, был ли уже день рождения в текущем году
+                if (date.Month > currentDate.Month || (date.Month == currentDate.Month && date.Day > currentDate.Day))
+                {
+                    age--;
+                }
+
+                return age;
+
+            }
+        }
+        /// <summary>
+        /// Конструктор для создания объекта класса User
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="subName"></param>
+        /// <param name="midName"></param>
+        /// <param name="date"></param>
+        /// <param name="age"></param>
+        public User(string name, string subName, string midName, DateTime date)
         {
 
-            Console.WriteLine("Введите своё имя: ");
-            name = Console.ReadLine();
-
-            Console.WriteLine("Введите свою фамилию: ");
-            subName = Console.ReadLine();
-
-            Console.WriteLine("Введите своё отчество: ");
-            midName = Console.ReadLine();
-
-            Console.WriteLine("Введите свою дату рождения: ");
-            date = Console.ReadLine();
-
-            Console.WriteLine("Введите свой возраст: ");
-            if (int.TryParse(Console.ReadLine(), out int userAge))
+            this.name = name;
+            this.subName = subName;
+            this.midName = midName;
+            this.date = date;
+           
+            if ((DateTime.Now.Year - date.Year) > 101)
             {
-                age = userAge;
+                throw new ArgumentException("Слишком старый пользователь");
             }
-            else
-            {
-                Console.WriteLine("Ошибка: Возраст должен быть числом.");
-                age = 0; // Устанавливаем значение по умолчанию.
-            }
-
-            Console.WriteLine($"Имя: {name}, Фамилия: {subName}, Отчесвтво: {midName}, Дата рождения: {date}, Возраст: {age} ");
 
         }
 
