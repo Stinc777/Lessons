@@ -13,6 +13,20 @@ namespace Lessons2_task6
         private double innerRadius;    // Внутренний радиус кольца
         private double outerRadius;    // Внешний радиус кольца
 
+        /// <summary>
+        /// Конструктор для создания объекта класса Ring
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="innerRadius"></param>
+        /// <param name="outerRadius"></param>
+        /// <exception cref="ArgumentException"></exception>
+        
+        public double CenterX { get; set; }
+        public double CenterY { get; set; }
+        public double InnerRadius { get; set; }
+        public double OuterRadius { get; set; }
+
         public Ring(double x, double y, double innerRadius, double outerRadius)
         {
             // Проверяем, что внешний радиус больше внутреннего радиуса
@@ -27,7 +41,9 @@ namespace Lessons2_task6
             this.outerRadius = outerRadius;
         }
 
-        // Свойство для вычисления площади кольца
+        /// <summary>
+        /// Свойство для вычисления площади кольца
+        /// </summary>
         public double Area
         {
             get
@@ -36,7 +52,9 @@ namespace Lessons2_task6
             }
         }
 
-        // Свойство для вычисления суммарной длины внешней и внутренней окружностей
+        /// <summary>
+        /// Свойство для вычисления суммарной длины внешней и внутренней окружностей
+        /// </summary>
         public double TotalCircumference
         {
             get
@@ -44,5 +62,6 @@ namespace Lessons2_task6
                 return 2 * Math.PI * outerRadius + 2 * Math.PI * innerRadius;
             }
         }
+
     }
 }

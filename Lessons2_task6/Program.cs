@@ -22,8 +22,8 @@ namespace Lessons2_task6
             double area = myRing.Area;
             double circumference = myRing.TotalCircumference;
 
-            Console.WriteLine($"Площадь кольца: {area:F5}");
-            Console.WriteLine($"Суммарная длина окружностей: {circumference:F5}");
+            Console.WriteLine($"Площадь кольца: {area:F3}");
+            Console.WriteLine($"Суммарная длина окружностей: {circumference:F3}");
 
             Console.ReadKey();
 

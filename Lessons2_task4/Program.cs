@@ -26,8 +26,7 @@ namespace Lessons2_task4
             bool isEqual = str1.Equals(str2);
             Console.WriteLine("Сравнение срок: " + isEqual);
 
-            char[] charArray = new char[] { 'H', 'e', 'l', 'l', 'o' };
-            MyString fromArray = MyString.FromCharArray(charArray);
+            MyString fromArray = MyString.FromCharArray(str1.ToCharArray());
             Console.WriteLine("Строку в символы: " + new string(fromArray.ToCharArray()));
 
             int indexOfO = str1.IndexOf('o');

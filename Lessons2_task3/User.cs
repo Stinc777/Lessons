@@ -106,5 +106,14 @@ namespace Lessons2_task3
 
         }
 
+        public override string ToString()
+        {
+            return $"Имя пользователя: {Name}\n" +
+                   $"Фамилия пользователя: {SubName}\n" +
+                   $"Отчество пользователя: {MidName}\n" +
+                   $"Дата Рождения: {Date.ToString("dd.MM.yyyy")}\n" +
+                   $"Полных лет: {Age}\n";
+        }
+
     }
 }

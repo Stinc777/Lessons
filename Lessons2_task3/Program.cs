@@ -22,12 +22,7 @@ namespace Lessons2_task3
 
                 User user = new User("Даниил", "Лексин", "Сергеевич", new DateTime(2001,06,08));
 
-
-                Console.WriteLine($"Имя пользователя: {user.Name}");
-                Console.WriteLine($"Фамилия пользователя: {user.SubName}");
-                Console.WriteLine($"Отчество пользователя: {user.MidName}");
-                Console.WriteLine($"Год рождения: {user.Date.ToString("dd.MM.yyyy")}");
-                Console.WriteLine($"Количество полных лет: {user.Age}"); 
+                Console.WriteLine(user);
 
                 Console.ReadKey();
 

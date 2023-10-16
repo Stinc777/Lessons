@@ -6,24 +6,34 @@ using System.Threading.Tasks;
 
 namespace Lessons2_task7
 {
-    // Базовый класс для всех фигур
+    /// <summary>
+    /// Базовый класс для всех фигур
+    /// </summary>
     internal class FigureHelper
     {
-        public string Type { get; protected set; }
+        /// <summary>
+        /// Свойство, которое запоминает или изменяет тип фигуры 
+        /// </summary>
+        public string Type { get; set; }
 
+        /// <summary>
+        /// Вывести тип фигуры и его свойства.
+        /// </summary>
         public virtual void Draw()
         {
             Console.WriteLine($"Тип фигуры: {Type}");
         }
     }
 
-    // Класс для представления Линии
+    /// <summary>
+    /// Класс для представления Линии
+    /// </summary>
     class Line : FigureHelper
     {
-        public int coordinateX1;
-        public int coordinateX2;
-        public int coordinateY1;
-        public int coordinateY2;
+        private int coordinateX1;
+        private int coordinateX2;
+        private int coordinateY1;
+        private int coordinateY2;
 
         public Line (int X1, int Y1, int X2, int Y2)
         {
@@ -42,14 +52,15 @@ namespace Lessons2_task7
 
     }
 
-    // Класс для представления окружности
+    /// <summary>
+    /// Класс для представления окружности
+    /// </summary>
     class Circle : FigureHelper
     {
-        public int crX;
-        public int crY;
-        public int radius;
+        private int crX;
+        private int crY;
+        private int radius;
 
-        //почему то не работает без void
         public  Circle (int X, int Y, int R)
         {
             Type = "Окружность";
@@ -65,11 +76,13 @@ namespace Lessons2_task7
         }
     }
 
-    // Класс для представления прямоугольника
+    /// <summary>
+    /// Класс для представления прямоугольника
+    /// </summary>
     class Rectangle : FigureHelper
     {
-        public int Width;
-        public int Height;
+        private int Width;
+        private int Height;
 
         public Rectangle (int width, int height)
         {
@@ -85,13 +98,15 @@ namespace Lessons2_task7
         }
     }
 
-    // Класс для представления круга
+    /// <summary>
+    /// Класс для представления круга
+    /// </summary>
     class Ellipse : FigureHelper
     {
-        public int crX;
-        public int crY;
-        public int SemiMajorAxis;
-        public int SemiMinorAxis;
+        private int crX;
+        private int crY;
+        private int SemiMajorAxis;
+        private int SemiMinorAxis;
 
         public Ellipse(int X, int Y, int major, int minor)
         {
@@ -109,13 +124,15 @@ namespace Lessons2_task7
         }
     }
 
-    // Класс для представления кольца
+    /// <summary>
+    /// Класс для представления кольца
+    /// </summary>
     class Ring : FigureHelper
     {
-        public int crX;
-        public int crY;
-        public int inRadius;
-        public int outRadius;
+        private int crX;
+        private int crY;
+        private int inRadius;
+        private int outRadius;
 
         public Ring(int x, int y, int innerRadius, int outerRadius)
         {
@@ -133,11 +150,17 @@ namespace Lessons2_task7
         }
     }
 
-    // Класс для векторного графического редактора
+    /// <summary>
+    /// Класс для векторного графического редактора
+    /// </summary>
     class VectorEditor
     {
         List<FigureHelper> figures = new List<FigureHelper>();
 
+        /// <summary>
+        /// Метод "Добавления" фигуры
+        /// </summary>
+        /// <param name="figure"></param>
         public void CreateFigure(FigureHelper figure)
         {
             figures.Add(figure);

@@ -22,16 +22,26 @@ namespace Lessons2_task4
             get { return characters.Length; }
         }
 
-        // Операция конкатенации
+        /// <summary>
+        /// Операция конкатенации
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
         public MyString Concatenate(MyString str)
         {
-            char[] result = new char[characters.Length + str.Length];
+            //Создается новый массив символов result, который будет использован для хранения символов конкатенированной строки.
+            //Размер этого массива равен сумме длин символов текущей строки (characters) и строки str, с которой происходит конкатенация.
+            char[] result = new char[characters.Length + str.Length]; 
             Array.Copy(characters, result, characters.Length);
             Array.Copy(str.characters, 0, result, characters.Length, str.Length);
             return new MyString(new string(result));
         }
 
-        // Операция сравнения
+        /// <summary>
+        /// Операция сравнения
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
         public bool Equals(MyString str)
         {
             if (characters.Length != str.Length)
@@ -46,7 +56,11 @@ namespace Lessons2_task4
             return true;
         }
 
-        // Операция поиска символа
+        /// <summary>
+        /// Операция поиска символа
+        /// </summary>
+        /// <param name="searchChar"></param>
+        /// <returns></returns>
         public int IndexOf(char searchChar)
         {
             for (int i = 0; i < characters.Length; i++)
@@ -57,7 +71,10 @@ namespace Lessons2_task4
             return -1; // Если символ не найден
         }
 
-        // Конвертация в массив символов
+        /// <summary>
+        /// Конвертация в массив символов
+        /// </summary>
+        /// <returns></returns>
         public char[] ToCharArray()
         {
             return characters;

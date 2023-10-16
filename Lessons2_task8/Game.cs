@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lessons2_task8;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,74 +7,84 @@ using System.Threading.Tasks;
 
 namespace Lessons2_task8
 {
-    // Базовый класс для игры
+    /// <summary>
+    /// Базовый класс для игры
+    /// </summary>
     internal class Game
     {
-        public int width;
-        public int height;
-        public int[] bonus_item;
-        public int[] rdm_value_obstacles;
+        public int WidthMap { get; set; } // Ширина карты
+        public int HeightMap { get; set; } // Высота карты
+        public int[] BonusItem { get; set; } // Местоположение бонусов
+        public int[] RdmValueObstacles { get; set; } // Местоположение препятствий
     }
 
-    // Класс Карты игры
+}
+
+    /// <summary>
+    /// Класс Карты игры
+    /// </summary>
     class Map : Game
-    {
+{
+        private Random random;
 
         public Map(int x, int y)
         {
-            width = x;
-            height = y;
-        }
+            WidthMap = x;
+            HeightMap = y;
+            random = new Random(); // Создаем генератор случайных чисел
+    }
 
         public void MapBonus()
         {
-            Random random = new Random(); // Создаем генератор случайных чисел
-
-            int prcnt_item = ((width * height) / 100) * 20; //Бонусы на карте будут в количестве 20 процентов.
+            
+            int prcnt_item = ((WidthMap * HeightMap) / 100) * 20; //Бонусы на карте будут в количестве 20 процентов.
             int value;
-            bonus_item = new int[prcnt_item];
+            BonusItem = new int[prcnt_item];
 
             for (int i = 0; i < prcnt_item; i++)
             {
-                value = random.Next(0, (width * height));
-                bonus_item[i] += value;
+                value = random.Next(1, (WidthMap * HeightMap));
+                BonusItem[i] += value;
             }
 
-            Bonus bonus = new Bonus(bonus_item);
+            Bonus bonus = new Bonus(BonusItem);
 
         }
 
         public void MapObstacles()
         {
-            Random randomObstacles = new Random(); // Создаем генератор случайных чисел для препятствий
-
-            int obstacles = ((width * height) / 100) * 10; // Препятствия на карте будут в количестве 10 процентов.
+            
+            int obstacles = ((WidthMap * HeightMap) / 100) * 10; // Препятствия на карте будут в количестве 10 процентов.
             int value;
-            rdm_value_obstacles = new int[obstacles];
+            RdmValueObstacles = new int[obstacles];
 
             for (int i = 0; i < obstacles; i++)
             {
                 do
                 {
-                    value = randomObstacles.Next(0, (width * height));
-                } while (Array.IndexOf(bonus_item, value) == -1); // Проверяем, не содержится ли это значение в массиве бонусов
+                    value = random.Next(1, (WidthMap * HeightMap));
+            } while (Array.IndexOf(BonusItem, value) == -1); // Проверяем, не содержится ли это значение в массиве бонусов
 
-                rdm_value_obstacles[i] = value;
+                RdmValueObstacles[i] = value;
             }
 
-            Obstacle obstacle = new Obstacle(rdm_value_obstacles);
+            Obstacle obstacle = new Obstacle(RdmValueObstacles);
 
         }
     }
 
-    // Базовый класс для игровых объектов
+    /// <summary>
+    /// Базовый класс для игровых объектов
+    /// </summary>
     class GameObject
     {
         public int X { get; set; }
         public int Y { get; set; }
     }
 
-    // Класс игрока
+    /// <summary>
+    /// Класс игрока
+    /// </summary>
     class Player : GameObject
     {
         public int Health { get; set; }
@@ -90,7 +101,9 @@ namespace Lessons2_task8
         }
     }
 
-    // Класс монстра
+    /// <summary>
+    /// Класс монстра
+    /// </summary>
     class Monster : GameObject
     {
         public int Damage { get; set; }
@@ -101,7 +114,9 @@ namespace Lessons2_task8
         }
     }
 
-    // Класс бонуса
+    /// <summary>
+    /// Класс бонуса
+    /// </summary>
     class Bonus : Game
     {
         public string Type { get; set; }
@@ -119,8 +134,10 @@ namespace Lessons2_task8
         }
     }
 
-    // Класс препятствия
-    class Obstacle : GameObject
+    /// <summary>
+    /// Класс препятствия
+    /// </summary>
+    class Obstacle : Game
     {
         public string Type { get; set; }
 
@@ -132,5 +149,3 @@ namespace Lessons2_task8
         }
     }
 
-
-}

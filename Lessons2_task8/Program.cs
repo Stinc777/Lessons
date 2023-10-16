@@ -33,16 +33,16 @@ namespace Lessons2_task8
 
             // Выводим массивы местоположения бонусов и препятствий
             Console.WriteLine("Местоположение бонусов:");
-            foreach (int location in gameMap.bonus_item)
-            {
-                Console.WriteLine(location);
-            }
+            string bonusLocations = string.Join(", ", gameMap.BonusItem);
+            Console.WriteLine(bonusLocations);
+
+            Console.WriteLine();
 
             Console.WriteLine("Местоположение препятствий:");
-            foreach (int location in gameMap.rdm_value_obstacles)
-            {
-                Console.WriteLine(location);
-            }
+            string obstaclesLocations = string.Join(", ", gameMap.RdmValueObstacles);
+            Console.WriteLine(obstaclesLocations);
+
+            Console.WriteLine();
 
             Console.ReadKey();
 

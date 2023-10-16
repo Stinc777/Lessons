@@ -19,7 +19,9 @@ namespace Lessons2_task5
             while (true)
             {
                 // Создаем объект класса Employee, передавая данные о сотруднике через конструктор
-                Employee employee = new Employee();
+                Employee employee = new Employee("Даниил", "Лексин", "Сергеевич", new DateTime(2001, 06, 08), "Программист", 2);
+
+                Console.WriteLine(employee);
 
                 Console.ReadKey();
 
