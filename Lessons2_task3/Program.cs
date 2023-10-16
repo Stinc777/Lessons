@@ -22,12 +22,22 @@ namespace Lessons2_task3
 
                 User user = new User("Даниил", "Лексин", "Сергеевич", new DateTime(2001,06,08));
 
+                changing(user, "Михаил");
+
+
                 Console.WriteLine(user);
 
                 Console.ReadKey();
 
                 Console.WriteLine();
             }
+        }
+
+        public static User changing(User sourseUser, string name)
+        {
+            User user = new User(name, sourseUser.SubName, sourseUser.MidName, sourseUser.Date);
+
+            return user;
         }
     }
 }

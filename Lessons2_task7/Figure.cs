@@ -9,7 +9,7 @@ namespace Lessons2_task7
     /// <summary>
     /// Базовый класс для всех фигур
     /// </summary>
-    internal class FigureHelper
+    internal class Figure
     {
         /// <summary>
         /// Свойство, которое запоминает или изменяет тип фигуры 
@@ -19,7 +19,7 @@ namespace Lessons2_task7
         /// <summary>
         /// Вывести тип фигуры и его свойства.
         /// </summary>
-        public virtual void Draw()
+        public void Draw()
         {
             Console.WriteLine($"Тип фигуры: {Type}");
         }
@@ -28,34 +28,44 @@ namespace Lessons2_task7
     /// <summary>
     /// Класс для представления Линии
     /// </summary>
-    class Line : FigureHelper
+    class Line : Figure
     {
-        private int coordinateX1;
-        private int coordinateX2;
-        private int coordinateY1;
-        private int coordinateY2;
+        private Point _start;
+        private Point _end;
+
+        public Line(Point start, Point end)
+        {
+            _start = start;
+            _end = end;
+        }
 
         public Line (int X1, int Y1, int X2, int Y2)
         {
             Type = "Линия";
-            coordinateX1 = X1;
-            coordinateY1 = Y1;
-            coordinateX2 = X2;
-            coordinateY2 = Y2;
+            _start.x = X1;
+            _start.y = Y1;
+            _end.x = X2;
+            _end.y = Y2;
         }
 
-        public override void Draw()
+        public void Draw()
         {
             base.Draw();
-            Console.WriteLine($"Начало линии: ({coordinateX1}, {coordinateY1}), Конец линиии: ({coordinateX2}, {coordinateY2})");
+            Console.WriteLine($"Начало линии: ({_start.x}, {_start.y}), Конец линиии: ({_end.x}, {_end.y})");
         }
 
+    }
+
+    struct Point 
+    {
+        public int x;
+        public int y;
     }
 
     /// <summary>
     /// Класс для представления окружности
     /// </summary>
-    class Circle : FigureHelper
+    class Circle : Figure
     {
         private int crX;
         private int crY;
@@ -69,7 +79,7 @@ namespace Lessons2_task7
             radius = R;
         }
 
-        public override void Draw()
+        public void Draw()
         {
             base.Draw();
             Console.WriteLine($"Координаты X и Y (центр): ({crX}, {crY}), Радиус: {radius}");
@@ -79,7 +89,7 @@ namespace Lessons2_task7
     /// <summary>
     /// Класс для представления прямоугольника
     /// </summary>
-    class Rectangle : FigureHelper
+    class Rectangle : Figure
     {
         private int Width;
         private int Height;
@@ -91,7 +101,7 @@ namespace Lessons2_task7
             Height = height;
         }
 
-        public override void Draw()
+        public void Draw()
         {
             base.Draw();
             Console.WriteLine($"Ширина прямоугольника: {Width}, Высота прямоугольника: {Height}");
@@ -101,7 +111,7 @@ namespace Lessons2_task7
     /// <summary>
     /// Класс для представления круга
     /// </summary>
-    class Ellipse : FigureHelper
+    class Ellipse : Figure
     {
         private int crX;
         private int crY;
@@ -117,7 +127,7 @@ namespace Lessons2_task7
             SemiMinorAxis = minor;
         }
 
-        public override void Draw()
+        public void Draw()
         {
             base.Draw();
             Console.WriteLine($"Координаты X и Y (центр): ({crX}, {crY}), Большая полуось: {SemiMajorAxis}, Малая полуось: {SemiMinorAxis}");
@@ -127,7 +137,7 @@ namespace Lessons2_task7
     /// <summary>
     /// Класс для представления кольца
     /// </summary>
-    class Ring : FigureHelper
+    class Ring : Figure
     {
         private int crX;
         private int crY;
@@ -143,7 +153,7 @@ namespace Lessons2_task7
             outRadius = outerRadius;
         }
 
-        public override void Draw()
+        public void Draw()
         {
             base.Draw();
             Console.WriteLine($"Координаты X и Y (центр): ({crX}, {crY}), Внутренний радиус: {inRadius}, Внешний радиус: {outRadius}");
@@ -155,13 +165,13 @@ namespace Lessons2_task7
     /// </summary>
     class VectorEditor
     {
-        List<FigureHelper> figures = new List<FigureHelper>();
+        List<Figure> figures = new List<Figure>();
 
         /// <summary>
         /// Метод "Добавления" фигуры
         /// </summary>
         /// <param name="figure"></param>
-        public void CreateFigure(FigureHelper figure)
+        public void AddFigure(Figure figure)
         {
             figures.Add(figure);
         }
@@ -173,7 +183,6 @@ namespace Lessons2_task7
                 figure.Draw();
             }
         }
-
     }
 
 }

@@ -22,11 +22,11 @@ namespace Lessons2_task7
 
             VectorEditor editor = new VectorEditor();
 
-            editor.CreateFigure(new Line(0, 0, 100, 100));
-            editor.CreateFigure(new Circle(50, 50, 30));
-            editor.CreateFigure(new Rectangle(10, 20));
-            editor.CreateFigure(new Ellipse(80, 80, 20, 10));
-            editor.CreateFigure(new Ring(60, 60, 15, 25));
+            editor.AddFigure(new Line(0, 0, 100, 100));
+            editor.AddFigure(new Circle(50, 50, 30));
+            editor.AddFigure(new Rectangle(10, 20));
+            editor.AddFigure(new Ellipse(80, 80, 20, 10));
+            editor.AddFigure(new Ring(60, 60, 15, 25));
 
             editor.DrawAllFigures();
 

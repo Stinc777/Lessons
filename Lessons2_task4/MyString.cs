@@ -17,6 +17,12 @@ namespace Lessons2_task4
             characters = str.ToCharArray();
         }
 
+        public MyString(char[] chars) 
+        {
+            characters = new char[chars.Length];
+            Array.Copy(chars, characters, chars.Length);
+        }
+
         public int Length
         {
             get { return characters.Length; }
@@ -34,7 +40,7 @@ namespace Lessons2_task4
             char[] result = new char[characters.Length + str.Length]; 
             Array.Copy(characters, result, characters.Length);
             Array.Copy(str.characters, 0, result, characters.Length, str.Length);
-            return new MyString(new string(result));
+            return new MyString(result);
         }
 
         /// <summary>
@@ -83,7 +89,12 @@ namespace Lessons2_task4
         // Конвертация из массива символов
         public static MyString FromCharArray(char[] charArray)
         {
-            return new MyString(new string(charArray));
+            return new MyString(charArray);
+        }
+
+        public override string ToString()
+        {
+            return new string(characters);
         }
     }
 }

@@ -21,13 +21,13 @@ namespace Lessons2_task4
             MyString str2 = new MyString("World");
 
             MyString concatenated = str1.Concatenate(str2);
-            Console.WriteLine("Объединение строк: " + new string(concatenated.ToCharArray()));
+            Console.WriteLine("Объединение строк: " + concatenated);
 
             bool isEqual = str1.Equals(str2);
             Console.WriteLine("Сравнение срок: " + isEqual);
 
             MyString fromArray = MyString.FromCharArray(str1.ToCharArray());
-            Console.WriteLine("Строку в символы: " + new string(fromArray.ToCharArray()));
+            Console.WriteLine("Строку в символы: " + fromArray);
 
             int indexOfO = str1.IndexOf('o');
             Console.WriteLine("Поиск символа 'о' в первой строке: " + indexOfO);

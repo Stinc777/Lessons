@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Lessons2_task3
 {
-    internal class User
+    public class User
     {     
 
         private string name;
