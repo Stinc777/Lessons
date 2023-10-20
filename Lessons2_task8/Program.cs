@@ -25,22 +25,9 @@ namespace Lessons2_task8
             System.Console.OutputEncoding = System.Text.Encoding.UTF8;
 
             // Создаем экземпляр игры
-            Map gameMap = new Map(10, 10); //  10x10 - размер карты
 
-            // Генерируем бонусы и препятствия
-            gameMap.MapBonus();
-            gameMap.MapObstacles();
+            Game gameMap = new Game(10, 10); //  10x10 - размер карты
 
-            // Выводим массивы местоположения бонусов и препятствий
-            Console.WriteLine("Местоположение бонусов:");
-            string bonusLocations = string.Join(", ", gameMap.BonusItem);
-            Console.WriteLine(bonusLocations);
-
-            Console.WriteLine();
-
-            Console.WriteLine("Местоположение препятствий:");
-            string obstaclesLocations = string.Join(", ", gameMap.RdmValueObstacles);
-            Console.WriteLine(obstaclesLocations);
 
             Console.WriteLine();
 

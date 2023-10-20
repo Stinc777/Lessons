@@ -12,14 +12,24 @@ namespace Lessons2_task5
     internal class Employee : User // Наследуем User для использования его свойств и методов
     {
         public string Position { get; set; } // Должность
-        public DateTime Experience => DateTime.Now - _dateEmployment;
+        public int Experience
+        {
+            get
+            {
+                int years = DateTime.Now.Year - _dateEmployment.Year;
+                if (DateTime.Now.Month < _dateEmployment.Month || (DateTime.Now.Month == _dateEmployment.Month && DateTime.Now.Day < _dateEmployment.Day))
+                {
+                    years--;
+                }
+                return years;
+            }
+        }
 
         private DateTime _dateEmployment;
-        public DateTime DateEmployment => _dateEmployment;
+
         /// <summary>
         /// Конструктор для создания объекта класса Employee
         /// </summary>
-
         public Employee(string name, string subName, string midName, DateTime date, string position, DateTime dateEmployment)
                : base(name, subName, midName, date)
         {

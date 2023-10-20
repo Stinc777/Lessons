@@ -12,140 +12,240 @@ namespace Lessons2_task8
     /// </summary>
     internal class Game
     {
-        public int WidthMap { get; set; } // Ширина карты
-        public int HeightMap { get; set; } // Высота карты
-        public int[] BonusItem { get; set; } // Местоположение бонусов
-        public int[] RdmValueObstacles { get; set; } // Местоположение препятствий
+
+        public int WidthMap { get; set; }
+        public int HeightMap { get; set; }
+
+        public Game(int x, int y)
+        {
+
+            WidthMap = x;
+            HeightMap = y;
+
+            Map map = new Map(WidthMap, HeightMap); // Создание объекта карты*/
+            Characters characters = new Characters(WidthMap, HeightMap);
+        }
+
     }
 
-}
 
     /// <summary>
     /// Класс Карты игры
     /// </summary>
-    class Map : Game
-{
+    class Map
+    {
+
         private Random random;
+
+        private int[] valueBonusX;
+        private int[] valueBonusY;
+        private int[] valueObstaclesX;
+        private int[] valueObstaclesY;
+
+        public int[] ValueBonusX { get;}
+
+        public int[] ValueBonusY { get; }
+        public int[] ValueObstaclesX { get; }
+        public int[] ValueObstaclesY { get; }
+
 
         public Map(int x, int y)
         {
-            WidthMap = x;
-            HeightMap = y;
-            random = new Random(); // Создаем генератор случайных чисел
-    }
+            random = new Random(); // Инициализация объекта random
 
-        public void MapBonus()
-        {
-            
-            int prcnt_item = ((WidthMap * HeightMap) / 100) * 20; //Бонусы на карте будут в количестве 20 процентов.
-            int value;
-            BonusItem = new int[prcnt_item];
+            MapBonus(x, y);
+            MapObstacles(x, y);
 
-            for (int i = 0; i < prcnt_item; i++)
-            {
-                value = random.Next(1, (WidthMap * HeightMap));
-                BonusItem[i] += value;
-            }
-
-            Bonus bonus = new Bonus(BonusItem);
+            ValueBonusX = valueBonusX;
+            ValueBonusY = valueBonusY;
+            ValueObstaclesX = valueObstaclesX;
+            ValueObstaclesY = valueObstaclesY;
 
         }
 
-        public void MapObstacles()
+        public void MapBonus(int x, int y)
         {
-            
-            int obstacles = ((WidthMap * HeightMap) / 100) * 10; // Препятствия на карте будут в количестве 10 процентов.
-            int value;
-            RdmValueObstacles = new int[obstacles];
+            int valueX;
+            int valueY;
+
+            double prcntItem = (x * y) * 20 / 100; //Бонусы на карте будут в количестве 20 процентов.
+
+            int item = (int)Math.Ceiling(prcntItem);
+
+            valueBonusX = new int[item];
+            valueBonusY = new int[item];
+
+            for (int i = 0; i < item; i++)
+            {
+                
+                valueX = random.Next(1, x);
+                valueY = random.Next(1, y);
+
+                if (!ContainsCoordinate(valueBonusX, valueBonusY, valueX, valueY))    // Проверяем, не содержится ли это значение в массиве бонусов
+                {
+                    valueBonusX[i] = valueX;
+                    valueBonusY[i] = valueY;
+                }
+                else i--;
+
+            }
+        }
+
+        public void MapObstacles(int x, int y)
+        {
+
+            int valueX;
+            int valueY;
+
+            double prcntObstacles = (x * y) * 10 / 100; // Препятствия на карте будут в количестве 10 процентов.          
+
+            int obstacles = (int)Math.Ceiling(prcntObstacles);
+
+            valueObstaclesX = new int[obstacles];
+            valueObstaclesY = new int[obstacles];
 
             for (int i = 0; i < obstacles; i++)
             {
-                do
-                {
-                    value = random.Next(1, (WidthMap * HeightMap));
-            } while (Array.IndexOf(BonusItem, value) == -1); // Проверяем, не содержится ли это значение в массиве бонусов
 
-                RdmValueObstacles[i] = value;
+                valueX = random.Next(1, (x));
+                valueY = random.Next(1, (y));
+
+                if (!ContainsCoordinate(valueBonusX, valueBonusY, valueX, valueY) &&     // Проверяем, не содержится ли это значение в массиве бонусов
+                !ContainsCoordinate(valueObstaclesX, valueObstaclesY, valueX, valueY))    // А также нет ли повторений в массиве препятствий
+                {
+                    valueObstaclesX[i] = valueX;
+                    valueObstaclesY[i] = valueY;
+                }
+                else i--;
+
             }
 
-            Obstacle obstacle = new Obstacle(RdmValueObstacles);
-
         }
+
+        private bool ContainsCoordinate(int[] xArray, int[] yArray, int x, int y)
+        {
+            for (int i = 0; i < xArray.Length; i++)
+            {
+                if (xArray[i] == x && yArray[i] == y)
+                {
+                    return true; // Координата уже существует в массиве
+                }
+            }
+            return false; // Координата не существует в массиве
+        }
+
     }
 
-    /// <summary>
-    /// Базовый класс для игровых объектов
-    /// </summary>
-    class GameObject
+    class Characters
     {
-        public int X { get; set; }
-        public int Y { get; set; }
+
+        private Random random;
+
+        private int valueSpawnPlayerX;
+        private int valueSpawnPlayerY;
+
+        private int[] valueSpawnMonstersX;
+        private int[] valueSpawnMonstersY;
+
+        private Map map; // Создайте поле для хранения экземпляра класса Map
+
+        public Characters(int x, int y)
+        {
+
+            random = new Random(); // Инициализация объекта random
+
+            map = new Map(x, y);
+
+            RespawnPlayer(x, y);
+
+            RespawnMonsters(x, y);
+
+        }
+        public void RespawnPlayer(int x, int y)
+        {
+            int valueX;
+            int valueY;
+
+
+            for (int i = 0; i < 1; i++)
+            {
+                valueX = random.Next(1, x);
+                valueY = random.Next(1, y);
+
+                // Проверяем, что координаты не совпадают ни в одном из массивов бонусов или препятствий
+                if (!(
+                    (Array.IndexOf(map.ValueBonusX, valueX) != -1 && Array.IndexOf(map.ValueBonusY, valueY) != -1) ||
+                    (Array.IndexOf(map.ValueObstaclesX, valueX) != -1 && Array.IndexOf(map.ValueObstaclesY, valueY) != -1)
+                ))
+                {
+                    valueSpawnPlayerX = valueX;
+                    valueSpawnPlayerY = valueY;
+                }
+                else i--;
+            }
+        }
+
+        public void RespawnMonsters(int x, int y)
+        {
+            int valueX;
+            int valueY;
+
+            // Вычисляем количество монстров в зависимости от размера карты
+            int numberOfMonsters = 0;
+
+            int totalMapValue = x * y;
+            if (totalMapValue < 25)
+            {
+                numberOfMonsters = 1;
+            }
+            else if (totalMapValue < 50)
+            {
+                numberOfMonsters = 2;
+            }
+            else if (totalMapValue < 75)
+            {
+                numberOfMonsters = 3;
+            }
+            else if (totalMapValue < 100)
+            {
+                numberOfMonsters = 4;
+            }
+            else
+            {
+                numberOfMonsters = 5;
+            }
+
+            valueSpawnMonstersX = new int[numberOfMonsters];
+            valueSpawnMonstersY = new int[numberOfMonsters];
+
+            for (int i = 0; i < numberOfMonsters; i++)
+            {
+                valueX = random.Next(1, x);
+                valueY = random.Next(1, y);
+
+                if (IsInBonusOrObstacle(valueX, valueY))    
+                {
+                    valueSpawnMonstersX[i] = valueX;
+                    valueSpawnMonstersY[i] = valueY;
+                }
+                else i--;
+
+            }
+        }
+
+        public bool IsInBonusOrObstacle(int x, int y)
+        {
+            return !(
+                    (Array.IndexOf(map.ValueBonusX, x) != -1 && Array.IndexOf(map.ValueBonusY, y) != -1) ||
+                    (Array.IndexOf(map.ValueObstaclesX, x) != -1 && Array.IndexOf(map.ValueObstaclesY, y) != -1) ||
+                    (valueSpawnPlayerX != x && valueSpawnPlayerY != y)
+                    );
+        }
+
     }
 
-    /// <summary>
-    /// Класс игрока
-    /// </summary>
-    class Player : GameObject
-    {
-        public int Health { get; set; }
-        public int Score { get; set; }
 
-        public void Move(int deltaX, int deltaY)
-        {
-            // Реализация движения игрока
-        }
+}
 
-        public void CollectBonus(Bonus bonus)
-        {
-            // Реализация подбора бонусов
-        }
-    }
 
-    /// <summary>
-    /// Класс монстра
-    /// </summary>
-    class Monster : GameObject
-    {
-        public int Damage { get; set; }
-
-        public void MoveTowardsPlayer(Player player)
-        {
-            // Реализация движения монстра к игроку
-        }
-    }
-
-    /// <summary>
-    /// Класс бонуса
-    /// </summary>
-    class Bonus : Game
-    {
-        public string Type { get; set; }
-
-        private int[] bonusItems;
-
-        public Bonus(int[] bonusItems)
-        {
-            this.bonusItems = bonusItems;
-        }
-
-        public void ApplyToPlayer(Player player)
-        {
-            // Используйте bonusItems для взаимодействия с бонусами
-        }
-    }
-
-    /// <summary>
-    /// Класс препятствия
-    /// </summary>
-    class Obstacle : Game
-    {
-        public string Type { get; set; }
-
-        private int[] obstacleItems;
-
-        public Obstacle(int[] obstacleItems)
-        {
-            this.obstacleItems = obstacleItems;
-        }
-    }
 
