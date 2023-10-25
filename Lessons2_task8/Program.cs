@@ -42,6 +42,11 @@ namespace Lessons2_task8
 
             Game gameMap = new Game(5, 5); //  10x10 - размер карты
 
+            gameMap.MoveUpPlayer();
+            gameMap.MoveDownPlayer();
+            gameMap.MoveRightPlayer();
+            gameMap.MoveLeftPlayer();
+
             Console.WriteLine();
 
             Console.ReadKey();
