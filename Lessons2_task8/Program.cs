@@ -40,16 +40,47 @@ namespace Lessons2_task8
 
             // Создаем экземпляр игры
 
-            Game game = new Game(5, 5); //  10x10 - размер карты
+            Game game = new Game(10, 10); //  10x10 - размер карты
             RenderingGame renderingGame = new RenderingGame(game);
 
-            Console.WriteLine(renderingGame.Rendering());
+            while (true)
+            {
+                Console.WriteLine(renderingGame.Rendering());
 
-            Console.WriteLine();
+                ConsoleKeyInfo key;
 
-            Console.ReadKey();
+                while (true)
+                {
+                    key = Console.ReadKey();
 
-            Console.WriteLine();
+                    if (key.Key == ConsoleKey.LeftArrow 
+                        || key.Key == ConsoleKey.RightArrow 
+                        || key.Key == ConsoleKey.UpArrow
+                        || key.Key == ConsoleKey.DownArrow)
+                    {
+                        break;
+                    }
+                }
+
+                switch (key.Key)
+                {
+                    case ConsoleKey.LeftArrow:
+                        game.MoveLeftPlayer();
+                        break;
+                    case ConsoleKey.RightArrow:
+                        game.MoveRightPlayer();
+                        break;
+                    case ConsoleKey.UpArrow:
+                        game.MoveUpPlayer();
+                        break;
+                    case ConsoleKey.DownArrow:
+                        game.MoveDownPlayer();
+                        break;
+                }
+
+                Console.Clear();
+
+            }
         }
     }
 }

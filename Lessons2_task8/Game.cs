@@ -26,7 +26,43 @@ namespace Lessons2_task8
         {
             Dictionary<Point, ItemType> points = new Dictionary<Point, ItemType>();
 
-            foreach (var item in map.ItemGames)
+            List<ItemGame> items = new List<ItemGame>();
+
+            foreach(var item in map.ItemGames)
+            {
+                items.Add(item);
+            }
+
+            for (int i = 0; i < items.Count-1; i++)
+            {
+                for (int j = i+1; j < items.Count;  j++)
+                {
+                    if (items[i].Point == items[j].Point)
+                    {
+                        if (items[i].Type == ItemType.MonsterType)
+                        {
+                            items.Remove(items[j]);
+                        }
+                        else
+                        {
+                            items.Remove(items[i]);
+                        }
+                        
+                        if (i > 0)
+                        {
+                            i--;
+                        }
+                        
+                        if(j > 0)
+                        {
+                            j--;
+                        }
+                    }
+                }
+            }
+
+
+            foreach (var item in items)
             {
                 points.Add(item.Point, item.Type);
             }
@@ -275,13 +311,14 @@ namespace Lessons2_task8
         /// </summary>
         private void CheckBonusSelection (Point newPosition)
         {
-            foreach (var item in map.ItemGames)
+            for (int i = 0; i < map.ItemGames.Count; i++)
             {
-                if (item.Type == ItemType.BonusType)
+                if (map.ItemGames[i].Type == ItemType.BonusType)
                 {
-                    if (item.Point == newPosition)
+                    if (map.ItemGames[i].Point == newPosition)
                     {
-                        map.ItemGames.Remove(item);
+                        map.ItemGames.Remove(map.ItemGames[i]);
+                        i--;
                     }
                 }
             }

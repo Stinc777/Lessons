@@ -15,23 +15,27 @@ namespace Lessons2_task8
         public RenderingGame(Game game)
         {
             _game = game;
-            points = _game.GetPointsMap();
         }
 
         public string Rendering()
         {
+            points = _game.GetPointsMap();
+
             StringBuilder map = new StringBuilder();
             Point point;
 
-            for(var i = _game.HeightMap+2; i > 0; i--)
+            int bordersWidth = _game.WidthMap + 2;
+            int bordersHeight = _game.HeightMap + 2;
+
+            for (var i = bordersHeight-1; i != -1; i--)
             {
-                for(var j = 0; j < _game.WidthMap + 2; j++)
+                for(var j = 0; j < bordersWidth; j++)
                 {
-                    if (i == 0 || i == _game.HeightMap + 2)
+                    if (i == 0 || i == bordersHeight-1)
                     {
                         map.Append(RenderingItems.Border);
                     }
-                    else if( j == 0 || j == _game.WidthMap + 2)
+                    else if( j == 0 || j == bordersWidth-1)
                     {
                         map.Append(RenderingItems.Border);
                     }
@@ -80,6 +84,6 @@ namespace Lessons2_task8
         public const string Bonus = "*";
         public const string Monster = "&";
         public const string Player = "☻";
-        public const string Spase = "0";
+        public const string Spase = " ";
     }
 }
