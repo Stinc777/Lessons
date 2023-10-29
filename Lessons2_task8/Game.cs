@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using static Lessons2_task8.Game;
 
@@ -11,19 +12,55 @@ namespace Lessons2_task8
     /// <summary>
     /// Базовый класс для игры
     /// </summary>
-    internal class Game
+    public class Game
     {
-
         Map map;
         private Random random;
         public Point PlauerPosition { get; set; }
+        private Player player;
+
+        public int WidthMap => map.Width;
+        public int HeightMap => map.Height;
+
+        public Dictionary<Point, ItemType> GetPointsMap()
+        {
+            Dictionary<Point, ItemType> points = new Dictionary<Point, ItemType>();
+
+            foreach (var item in map.ItemGames)
+            {
+                points.Add(item.Point, item.Type);
+            }
+
+            return points;
+        }
 
         public Game(int width, int height)
         {
-
             map = new Map(width, height); // Создание объекта карты*/
             random = new Random();
             GeneratingItems();
+        }
+
+        public void MoveUpPlayer ()
+        {
+            MoveUp(player);
+            MoveMonsters();
+        }
+
+        public void MoveDownPlayer()
+        {
+            MoveDown(player);
+            MoveMonsters();
+        }
+        public void MoveRightPlayer()
+        {
+            MoveRight(player);
+            MoveMonsters();
+        }
+        public void MoveLeftPlayer()
+        {
+            MoveLeft(player);
+            MoveMonsters();
         }
 
         /// <summary>
@@ -31,63 +68,53 @@ namespace Lessons2_task8
         /// </summary>
         private void GeneratingItems()
         {
-            GeneratingObstacle();
-            GeneratingBonuses();
-            SpawnMonsters();
+            GeneratingObjects(20, ItemType.BonusType);
+            GeneratingObjects(10, ItemType.ObstacleType);
+            GeneratingObjects(0, ItemType.MonsterType);
             SpawnPlayer();
         }
 
         /// <summary>
-        /// Генерирует препятствия на карте.
+        /// Генерирует объекты на карте.
         /// </summary>
-        private void GeneratingObstacle()
+        private void GeneratingObjects(int prcntObject, ItemType type)
         {
-            Point value;
+            Point pointObject;
 
-            double prcntItem = (map.Height * map.Width) * 10 / 100; //Препятствия на карте будут в количестве 10 процентов.
+            int quantity;
 
-            int quantity = (int)Math.Round(prcntItem);
-
-            for (int i = 0; i < quantity; i++)
+            if (type == ItemType.MonsterType)
             {
-
-                value.X = random.Next(1, map.Width);
-                value.Y = random.Next(1, map.Height);
-
-
-                if (!ContainsCoordinate(map.Obstacles, map.Bonuses, value))
-                {
-                    map.Obstacles.Add(new Obstacle(value));
-                }
-                else
-                {
-                    i--;
-                }
-
+                quantity = totalMonsters();
             }
-        }
+            else
+            {
+                double valueObject = (map.Height * map.Width) * prcntObject / 100; //Бонусы на карте будут в количестве 20 процентов.
 
-        /// <summary>
-        /// Генерирует бонусы на карте.
-        /// </summary>
-        private void GeneratingBonuses()
-        {
-            Point value;
-
-            double prcntItem = (map.Height * map.Width) * 20 / 100; //Бонусы на карте будут в количестве 20 процентов.
-
-            int quantity = (int)Math.Round(prcntItem);       
+                quantity = (int)Math.Round(valueObject);
+            }
 
             for (int i = 0; i < quantity; i++)
             {
 
-                value.X = random.Next(1, map.Width);
-                value.Y = random.Next(1, map.Height);
+                pointObject.X = random.Next(0, map.Width);
+                pointObject.Y = random.Next(0, map.Height);
 
-                if (!ContainsCoordinate(map.Obstacles, map.Bonuses, value))    // Проверяем, не содержится ли это значение в массиве объектов на карте
+                if (!ContainsCoordinate(map.ItemGames, pointObject))    // Проверяем, не содержится ли это значение в массиве объектов на карте
                 {
-                    map.Bonuses.Add(new Bonus(value));
-
+                    switch (type)
+                    {
+                        case ItemType.ObstacleType:
+                            map.ItemGames.Add(new Obstacle(pointObject));
+                            break;
+                        case ItemType.BonusType:
+                            map.ItemGames.Add(new Bonus(pointObject));
+                            break;
+                        case ItemType.MonsterType:
+                            map.ItemGames.Add(new Monster(pointObject));
+                            break;
+                    }
+                 
                 }
                 else i--;
 
@@ -101,32 +128,26 @@ namespace Lessons2_task8
         {
             Point value = new Point();
 
-            for (int i = 0; i < 1; i++)
+            bool contains = true;
+            while (contains)
             {
+                value.X = random.Next(0, map.Width);
+                value.Y = random.Next(0, map.Height);
 
-                value.X = random.Next(1, map.Width);
-                value.Y = random.Next(1, map.Height);
+                contains = ContainsCoordinate(map.ItemGames, value);
 
-                if (!ContainsCoordinate(map.Obstacles, map.Bonuses, value))    // Проверяем, не содержится ли это значение в массиве объектов на карте
+                if (!contains)    // Проверяем, не содержится ли это значение в массиве объектов на карте
                 {
-                    PlauerPosition = value;
+                    player = new Player(value);
+                    map.ItemGames.Add(player);
                 }
-                else i--;
-
             }
-
         }
 
-        /// <summary>
-        /// Генерирует монстров на карте.
-        /// </summary>
-        private void SpawnMonsters()
+        private int totalMonsters ()
         {
-            Point value;
 
-            // Вычисляем количество монстров в зависимости от размера карты
             int numberOfMonsters = 0;
-
             int totalTiles = map.Width * map.Height;
             if (totalTiles < 25)
             {
@@ -149,131 +170,96 @@ namespace Lessons2_task8
                 numberOfMonsters = 5;
             }
 
-            for (int i = 0; i < numberOfMonsters; i++)
-            {
+            return numberOfMonsters;
 
-                value.X = random.Next(1, map.Width);
-                value.Y = random.Next(1, map.Height);
-
-                if (!ContainsCoordinate(map.Obstacles, map.Bonuses, value))    // Проверяем, не содержится ли это значение в массиве объектов на карте
-                {
-                    map.Monsters.Add(new Monster(value));
-                }
-                else i--;
-
-            }
         }
 
         /// <summary>
         /// Проверка содержания значений координат с другими объектами на карте.
         /// </summary>
-        private bool ContainsCoordinate(List<Obstacle> obstacles, List<Bonus> bonuses, Point newPoint)
+        private bool ContainsCoordinate(List<ItemGame> items, Point newPoint)
         {
-            foreach (var obstacle in obstacles)
+            foreach (var item in items)
             {
-                if (obstacle.Point.X == newPoint.X && obstacle.Point.Y == newPoint.Y)
+                if (item.Point == newPoint)
                 {
-                    return true; // Координата уже существует среди препятствий
+                    return true;
                 }
             }
-
-            foreach (var bonus in bonuses)
-            {
-                if (bonus.Point.X == newPoint.X && bonus.Point.Y == newPoint.Y)
-                {
-                    return true; // Координата уже существует среди бонусов
-                }
-            }
-
-            return false; // Координата не существует в обоих списках
+            return false;
         }
 
         /// <summary>
-        /// Перемещает игрока вверх.
+        /// Перемещает юнита вверх.
         /// </summary>
-        public void MoveUpPlayer()
+        private void MoveUp(ItemGame item)
         {
-            Point newPlayerPosition;
 
-            newPlayerPosition = PlauerPosition;
+            Point newPoint = item.Point;
 
-            newPlayerPosition.Y = newPlayerPosition.Y + 1;
+            newPoint.Y++;
 
-            if (CheckAbroadAndObstacles(newPlayerPosition))
+            if (CheckNewPoints(newPoint, item.Type))
             {
-
-                CheckBonusSelection(newPlayerPosition);
-
-                PlauerPosition = newPlayerPosition;
-
+                item.Point = newPoint;
             }
-
         }
 
         /// <summary>
-        /// Перемещает игрока вниз.
+        /// Перемещает юнита вниз.
         /// </summary>
-        public void MoveDownPlayer()
+        private void MoveDown(ItemGame item)
         {
-            Point newPlayerPosition;
+            Point newPoint = item.Point;
 
-            newPlayerPosition = PlauerPosition;
+            newPoint.Y--;
 
-            newPlayerPosition.Y = newPlayerPosition.Y - 1;
-
-            if (CheckAbroadAndObstacles(newPlayerPosition))
+            if (CheckNewPoints(newPoint, item.Type))
             {
-
-                CheckBonusSelection(newPlayerPosition);
-
-                PlauerPosition = newPlayerPosition;
-
+                item.Point = newPoint;
             }
-
         }
 
         /// <summary>
-        /// Перемещает игрока вправо.
+        /// Перемещает юнита вправо.
         /// </summary>
-        public void MoveRightPlayer()
+        private void MoveRight(ItemGame item)
         {
-            Point newPlayerPosition;
+            Point newPoint = item.Point;
 
-            newPlayerPosition = PlauerPosition;
+            newPoint.X++;
 
-            newPlayerPosition.X = newPlayerPosition.X + 1;
-
-            if (CheckAbroadAndObstacles(newPlayerPosition))
+            if (CheckNewPoints(newPoint, item.Type))
             {
-
-                CheckBonusSelection(newPlayerPosition);
-
-                PlauerPosition = newPlayerPosition;
-
+                item.Point = newPoint;
             }
-
         }
 
         /// <summary>
-        /// Перемещает игрока влево.
+        /// Перемещает юнита влево.
         /// </summary>
-        public void MoveLeftPlayer()
+        private void MoveLeft(ItemGame item)
         {
-            Point newPlayerPosition;
+            Point newPoint = item.Point;
 
-            newPlayerPosition = PlauerPosition;
+            newPoint.X--;
 
-            newPlayerPosition.X = newPlayerPosition.X - 1;
-
-            if (CheckAbroadAndObstacles(newPlayerPosition))
+            if (CheckNewPoints(newPoint, item.Type))
             {
-
-                CheckBonusSelection(newPlayerPosition);
-
-                PlauerPosition = newPlayerPosition;
-
+                item.Point = newPoint;
             }
+        }
 
+        
+        private bool CheckNewPoints(Point newPoint,  ItemType type)
+        {
+            if (CheckAbroadAndObstacles(newPoint))
+            {
+                if (type == ItemType.Player)
+                    CheckBonusSelection(newPoint);
+                return true;
+            }
+            return false;
         }
 
         /// <summary>
@@ -281,18 +267,7 @@ namespace Lessons2_task8
         /// </summary>
         private bool CheckAbroadAndObstacles(Point newPosition)
         {
-            // Проверяем, не выходит ли новая позиция за границы карты
-            if (map.IsInsideMap(newPosition))
-            {
-                // Проверяем, не содержится ли она в списке препятствий
-                if (!map.IsObstacle(newPosition))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-
+            return map.IsInsideMap(newPosition) && !map.IsObstacle(newPosition);
         }
 
         /// <summary>
@@ -300,13 +275,15 @@ namespace Lessons2_task8
         /// </summary>
         private void CheckBonusSelection (Point newPosition)
         {
-            // Ищем бонус на новой позиции игрока
-            Bonus bonus = map.Bonuses.Find(b => b.Point.X == newPosition.X && b.Point.Y == newPosition.Y);
-
-            if (bonus != null)
+            foreach (var item in map.ItemGames)
             {
-                // Если бонус найден, удалите его из списка Bonuses
-                map.Bonuses.Remove(bonus);
+                if (item.Type == ItemType.BonusType)
+                {
+                    if (item.Point == newPosition)
+                    {
+                        map.ItemGames.Remove(item);
+                    }
+                }
             }
         }
 
@@ -315,49 +292,43 @@ namespace Lessons2_task8
         /// </summary>
         private void MoveMonsters()
         {
-            foreach (Monster monster in map.Monsters)
+            foreach (var item in map.ItemGames)
             {
-                // Генерируем случайное число от 0 до 3, которое представляет одно из четырех направлений:
-                // 0 - влево, 1 - вправо, 2 - вверх, 3 - вниз
-                int randomDirection = random.Next(4);
 
-                // Получаем текущее положение монстра
-                Point currentMonsterPosition = monster.Point;
-
-                // Создаем новую точку, куда монстр может переместиться
-                Point newMonsterPosition = currentMonsterPosition;
-
-                // В зависимости от сгенерированного случайного направления, обновляем новую позицию монстра
-                switch (randomDirection)
+                if (item.Type == ItemType.MonsterType)
                 {
-                    case 0: // Двигаемся влево
-                        newMonsterPosition.X -= 1;
-                        break;
-                    case 1: // Двигаемся вправо
-                        newMonsterPosition.X += 1;
-                        break;
-                    case 2: // Двигаемся вверх
-                        newMonsterPosition.Y += 1;
-                        break;
-                    case 3: // Двигаемся вниз
-                        newMonsterPosition.Y -= 1;
-                        break;
-                }
-
-                // Проверяем, не выходит ли новая позиция за границы карты и не пересекается ли с препятствиями
-                if (map.IsInsideMap(newMonsterPosition) && !map.IsObstacle(newMonsterPosition))
-                {
-                    // Если монстр не видит игрока, он двигается случайно
-                    if (!IsPlayerVisible(currentMonsterPosition, PlayerPosition))
+                    // Если монстр видит игрока, используем метод Harassment
+                    if (IsPlayerVisible(item.Point, player.Point))
                     {
-                        monster.Point = newMonsterPosition;
+                        Harassment(item);
                     }
                     else
                     {
-                        // Если монстр видит игрока, используем метод Harassment
-                        Harassment(monster);
+                        RandomMoveMonster(item);
                     }
                 }
+            }
+        }
+
+        private void RandomMoveMonster (ItemGame monster)
+        {
+            // Генерируем случайное число от 0 до 3, которое представляет одно из четырех направлений:              
+            int randomDirection = random.Next(4);
+            // В зависимости от сгенерированного случайного направления, обновляем новую позицию монстра
+            switch (randomDirection)
+            {
+                case 0: // Двигаемся влево
+                    MoveLeft(monster);
+                    break;
+                case 1: // Двигаемся вправо
+                    MoveRight(monster);
+                    break;
+                case 2: // Двигаемся вверх
+                    MoveUp(monster);
+                    break;
+                case 3: // Двигаемся вниз
+                    MoveDown(monster);
+                    break;
             }
         }
 
@@ -373,200 +344,181 @@ namespace Lessons2_task8
             if (monsterPosition.X == PlayerPosition.X)
             {
                 int distance = Math.Abs(monsterPosition.Y - PlayerPosition.Y);
-                return distance == 1 || distance == 2;
+                return distance < 3; 
             }
             else if (monsterPosition.Y == PlayerPosition.Y)
             {
                 int distance = Math.Abs(monsterPosition.X - PlayerPosition.X);
-                return distance == 1 || distance == 2;
+                return distance < 3;
             }
             return false;
-        }
-
-        /// <summary>
-        /// Проверка содержания значений координат на наличие препятствий и игрока.
-        /// </summary>
-        private bool ContainsObstacleOrPlayer(List<Obstacle> obstacles,  Point newPoint)
-        {
-            foreach (var obstacle in obstacles)
-            {
-                if (obstacle.Point.X == newPoint.X && obstacle.Point.Y == newPoint.Y)
-                {
-                    return true; // Координата уже существует среди препятствий
-                }
-            }
-
-            if (PlauerPosition.X == newPoint.X && PlauerPosition.Y == newPoint.Y)
-            {
-                 // Нанесение урона игроку
-            }
-
-            return false; // Координата не существует в обоих списках
-
         }
 
         /// <summary>
         /// Преследование игрока.
         /// </summary>
         /// <param name="monster"></param>
-        private void Harassment(Monster monster)
+        private void Harassment(ItemGame monster)
         {
             Point monsterPosition = monster.Point;
-            Point playerPosition = PlauerPosition; 
+            Point playerPosition = player.Point;
 
             // Вычисляем разницу между позициями монстра и игрока по горизонтали и вертикали
             int diffX = playerPosition.X - monsterPosition.X;
             int diffY = playerPosition.Y - monsterPosition.Y;
 
             // Передвигаем монстра ближе к игроку в направлении, в котором тот находится
-            if (Math.Abs(diffX) > Math.Abs(diffY))
+            if (Math.Abs(diffX) < Math.Abs(diffY))
             {
                 if (diffX > 0)
                 {
-                    monsterPosition.X += 1;
+                    MoveRight(monster);
                 }
                 else
                 {
-                    monsterPosition.X -= 1;
+                    MoveLeft(monster);
                 }
             }
             else
             {
                 if (diffY > 0)
                 {
-                    monsterPosition.Y += 1;
+                    MoveUp(monster);
                 }
                 else
                 {
-                    monsterPosition.Y -= 1;
+                    MoveDown(monster);
                 }
-            }
-
-            // Проверяем, не выходит ли новая позиция за границы карты и не пересекается ли с препятствиями
-            if (map.IsInsideMap(monsterPosition) && !map.IsObstacle(monsterPosition))
-            {
-                monster.Point = monsterPosition;
-            }
-        }
-
-        /// <summary>
-        /// Класс Map представляет карту игры.
-        /// </summary>
-        class Map
-        {
-
-            private int _width;
-            private int _height;
-            public int Width => _width;
-            public int Height => _height;
-
-            /*public List<ItemGame> ItemGames;*/
-
-            // Отдельные списки для каждого элемента
-            public List<Obstacle> Obstacles { get; }
-            public List<Bonus> Bonuses { get; }
-            public List<Monster> Monsters { get; }
-
-            public Map(int width, int height)
-            {
-                _width = width;
-                _height = height;
-                /*ItemGames = new List<ItemGame>();*/
-                Obstacles = new List<Obstacle>();
-                Bonuses = new List<Bonus>();
-                Monsters = new List<Monster>();
-            }
-
-            /// <summary>
-            /// Проверка выхода за пределы карты
-            /// </summary>
-            /// <param name="position"></param>
-            /// <returns></returns>
-            public bool IsInsideMap(Point position)
-            {
-                return position.X >= 1 && position.X <= Width && position.Y >= 1 && position.Y <= Height;
-            }
-
-            /// <summary>
-            /// Проверка сталкивания с препятствием
-            /// </summary>
-            /// <param name="position"></param>
-            /// <returns></returns>
-            public bool IsObstacle(Point position)
-            {
-                return Obstacles.Any(obstacle => obstacle.Point.X == position.X && obstacle.Point.Y == position.Y);
-            }
-
-        }
-
-        public enum ItemType
-        {
-            ObstacleType,
-            BonusType,
-            MonsterType,
-            Player
-        }
-
-        public struct Point
-        {
-            public int X, Y;
-        }
-
-        public class ItemGame
-        {
-            internal Point _point;
-            public Point Point => _point;
-            internal ItemType _type;
-            public ItemType Type => _type;
-            public ItemGame(Point point, ItemType type)
-            {
-                _point = point;
-                _type = type;
-            }
-        }
-
-        public class Obstacle : ItemGame
-        {
-
-            public Obstacle(Point point) : base(point, ItemType.ObstacleType)
-            {
-
-            }
-        }
-
-        public class Bonus : ItemGame
-        {
-            public Bonus(Point point) : base(point, ItemType.BonusType)
-            {
-
-            }
-        }
-
-        public class Unit : ItemGame
-        {
-            public Unit(Point point, ItemType type) : base(point, type)
-            {
-
-            }
-        }
-
-        public class Player : Unit
-        {
-            public Player(Point point) : base(point, ItemType.Player)
-            {
-
-            }
-
-        }
-
-        public class Monster : Unit
-        {
-            public Monster(Point point) : base(point, ItemType.MonsterType)
-            {
-
             }
         }
     }
+
+    /// <summary>
+    /// Класс Map представляет карту игры.
+    /// </summary>
+    public class Map
+    {
+
+        private int _width;
+        private int _height;
+        public int Width => _width;
+        public int Height => _height;
+
+        public List<ItemGame> ItemGames;
+
+        public Map(int width, int height)
+        {
+            _width = width;
+            _height = height;
+            ItemGames = new List<ItemGame>();
+        }
+
+        /// <summary>
+        /// Проверка выхода за пределы карты
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        public bool IsInsideMap(Point position)
+        {
+            return position.X >= 0 && position.X <= Width && position.Y >= 0 && position.Y <= Height;
+        }
+
+        /// <summary>
+        /// Проверка сталкивания с препятствием
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        public bool IsObstacle(Point position)
+        {
+            foreach (var item in ItemGames)
+            {
+                if (item.Type == ItemType.ObstacleType)
+                {
+                    if (item.Point.X == position.X && item.Point.Y == position.Y)
+                        return true;
+                }
+            }
+            return false;
+        }
+
+    }
+
+    public enum ItemType
+    {
+        ObstacleType,
+        BonusType,
+        MonsterType,
+        Player
+    }
+
+    public struct Point
+    {
+        public int X, Y;
+
+        public static bool operator !=(Point pointA, Point pointB)
+        {
+            return (pointA.X != pointB.X || pointA.Y != pointB.Y);
+        }
+
+        public static bool operator ==(Point pointA, Point pointB)
+        {
+            return pointA.X == pointB.X && pointA.Y == pointB.Y;
+        }
+    }
+
+    public class ItemGame
+    {
+        public Point Point { get; set; }
+        internal ItemType _type;
+        public ItemType Type => _type;
+        public ItemGame(Point point, ItemType type)
+        {
+            Point = point;
+            _type = type;
+        }
+    }
+
+    public class Obstacle : ItemGame
+    {
+
+        public Obstacle(Point point) : base(point, ItemType.ObstacleType)
+        {
+
+        }
+    }
+
+    public class Bonus : ItemGame
+    {
+        public Bonus(Point point) : base(point, ItemType.BonusType)
+        {
+
+        }
+    }
+
+    public class Unit : ItemGame
+    {
+        public Unit(Point point, ItemType type) : base(point, type)
+        {
+
+        }
+    }
+
+    public class Player : Unit
+    {
+        public Player(Point point) : base(point, ItemType.Player)
+        {
+
+        }
+    }
+
+    public class Monster : Unit
+    {
+        public Monster(Point point) : base(point, ItemType.MonsterType)
+        {
+
+        }
+    }
+
 }
 
 

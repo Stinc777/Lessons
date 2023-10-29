@@ -40,12 +40,10 @@ namespace Lessons2_task8
 
             // Создаем экземпляр игры
 
-            Game gameMap = new Game(5, 5); //  10x10 - размер карты
+            Game game = new Game(5, 5); //  10x10 - размер карты
+            RenderingGame renderingGame = new RenderingGame(game);
 
-            gameMap.MoveUpPlayer();
-            gameMap.MoveDownPlayer();
-            gameMap.MoveRightPlayer();
-            gameMap.MoveLeftPlayer();
+            Console.WriteLine(renderingGame.Rendering());
 
             Console.WriteLine();
 
