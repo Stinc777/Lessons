@@ -17,8 +17,20 @@ namespace Lessons2_task4
         {
             System.Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-            MyString str1 = new MyString("Hello");
-            MyString str2 = new MyString("World");
+            Console.WriteLine("Данная программа создаёт класс MyString, описывающий строку как массив символов. И работает со строками");
+
+            Console.WriteLine();
+            Console.WriteLine("Введите первую строку");
+
+            string userStr1 = Console.ReadLine();
+
+            Console.WriteLine();
+            Console.WriteLine("Введите вторую строку");
+
+            string userStr2 = Console.ReadLine();
+
+            MyString str1 = new MyString(userStr1);
+            MyString str2 = new MyString(userStr2);
 
             MyString concatenated = str1.Concatenate(str2);
             Console.WriteLine("Объединение строк: " + concatenated);
@@ -29,12 +41,33 @@ namespace Lessons2_task4
             MyString fromArray = MyString.FromCharArray(str1.ToCharArray());
             Console.WriteLine("Строку в символы: " + fromArray);
 
-            int indexOfO = str1.IndexOf('o');
-            Console.WriteLine("Поиск символа 'о' в первой строке: " + indexOfO);
+            Console.WriteLine();
+            Console.WriteLine("Какой символ найти в первой строке?");
+
+            string userChar = Console.ReadLine();
+
+            while (userChar.Length > 1)
+            {
+                Console.WriteLine("Вы ввели больше одного символа. Попробуйте ещё раз:");
+                userChar = Console.ReadLine();
+            }
+
+            Console.WriteLine("Поиск символа {0} в первой строке: {1}", userChar, str1.IndexOf(char.Parse(userChar)));
 
             Console.ReadKey();
 
             Console.WriteLine();
+        }
+
+        static bool CheckDigits(string str)
+        {
+            foreach (char c in str)
+            {
+                if (char.IsDigit(c) || char.IsPunctuation(c))
+                    return true;
+            }
+
+            return false;
         }
     }
 }

@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{788E97A2-6DD9-45D9-8C89-37D5A093A4BA}</ProjectGuid>
+    <ProjectGuid>{A64B1D2B-2B9A-4D99-93FD-915C20A7D9AB}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Lessons2_task5</RootNamespace>
-    <AssemblyName>Lessons2_task5</AssemblyName>
+    <RootNamespace>Lessons1_task17</RootNamespace>
+    <AssemblyName>Lessons1_task17</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -45,16 +45,9 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Employee.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Lessons2_task3\Lessons2_task3.csproj">
-      <Project>{6cdeb047-ac98-4804-93e8-47399ce64b55}</Project>
-      <Name>Lessons2_task3</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

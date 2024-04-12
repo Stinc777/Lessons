@@ -67,14 +67,14 @@ namespace Lessons2_task4
         /// </summary>
         /// <param name="searchChar"></param>
         /// <returns></returns>
-        public int IndexOf(char searchChar)
+        public bool IndexOf(char searchChar)
         {
             for (int i = 0; i < characters.Length; i++)
             {
                 if (characters[i] == searchChar)
-                    return i;
+                    return true;
             }
-            return -1; // Если символ не найден
+            return false; // Если символ не найден
         }
 
         /// <summary>

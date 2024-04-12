@@ -24,9 +24,12 @@ namespace Lessons2_task3
             set
             {
                 if (!string.IsNullOrWhiteSpace(value)) 
-                
                 {
                     name = value;
+                }
+                else
+                {
+                    throw new ArgumentException("Ошибка в имени");
                 }
             }
 
@@ -41,9 +44,12 @@ namespace Lessons2_task3
             set
             {
                 if (!string.IsNullOrWhiteSpace(value))
-
                 {
-                    name = value;
+                    subName = value;
+                }
+                else
+                {
+                    throw new ArgumentException("Ошибка в фамилии");
                 }
             }
         }
@@ -57,9 +63,12 @@ namespace Lessons2_task3
             set
             {
                 if (!string.IsNullOrWhiteSpace(value))
-
                 {
-                    name = value;
+                    midName = value;
+                }
+                else
+                {
+                    throw new ArgumentException("Ошибка в отчестве");
                 }
             }
         }
@@ -94,9 +103,9 @@ namespace Lessons2_task3
         public User(string name, string subName, string midName, DateTime date)
         {
 
-            this.name = name;
-            this.subName = subName;
-            this.midName = midName;
+            Name = name;
+            SubName = subName;
+            MidName = midName;
             this.date = date;
            
             if ((DateTime.Now.Year - date.Year) > 101)
@@ -113,6 +122,21 @@ namespace Lessons2_task3
                    $"Отчество пользователя: {MidName}\n" +
                    $"Дата Рождения: {Date.ToString("dd.MM.yyyy")}\n" +
                    $"Полных лет: {Age}\n";
+        }
+
+        public static User Changing(User sourseUser, string name)
+        {
+            User user = new User(name, sourseUser.SubName, sourseUser.MidName, sourseUser.Date);
+
+            Console.WriteLine(user);
+
+            return user;
+        }
+
+        public static User NameChanging(User sourceUser, string name)
+        {
+            sourceUser.Name = name;
+            return sourceUser;
         }
 
     }

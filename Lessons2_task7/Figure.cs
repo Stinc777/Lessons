@@ -170,7 +170,6 @@ namespace Lessons2_task7
         /// <summary>
         /// Метод "Добавления" фигуры
         /// </summary>
-        /// <param name="figure"></param>
         public void AddFigure(Figure figure)
         {
             figures.Add(figure);
